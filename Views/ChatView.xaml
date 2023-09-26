@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ChatApp.Views.ChatView"
+             xmlns:viewmodels="clr-namespace:ChatApp.ViewModels"
+             xmlns:models="clr-namespace:ChatApp.Models"
+             Title="ChatView">
+
+    <ContentPage.BindingContext>
+        <viewmodels:ChatViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+         <ResourceDictionary>
+             <toolkit:EnumToBoolConverter x:Key="MessageTypeConverter" />
+         </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,Auto, Auto" ColumnDefinitions="*,Auto">
+
+        <CollectionView ItemsSource="{Binding Messages}" x:Name="cvMensajes"
+                    Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Margin="5">
+                        <Frame BackgroundColor="DarkSlateGrey" Padding="10" HorizontalOptions="FillAndExpand" CornerRadius="25"
+                               IsVisible="{Binding Type, Converter={StaticResource MessageTypeConverter}, ConverterParameter={x:Static models:MessageType.Assistant}}">
+
+                            <Label Text="{Binding Text}" TextColor="White" FontAttributes="Bold" FontSize="Body" HorizontalTextAlignment="Start" />
+
+                        </Frame>
+
+                        <Frame BackgroundColor="LightGreen" Padding="10" HorizontalOptions="FillAndExpand" CornerRadius="25"
+                               IsVisible="{Binding Type, Converter={StaticResource MessageTypeConverter}, ConverterParameter={x:Static models:MessageType.User}}">
+
+                            <Label Text="{Binding Text}" TextColor="Black" FontSize="Body" HorizontalTextAlignment="End"
+                                IsVisible="{Binding Type, Converter={StaticResource MessageTypeConverter}, ConverterParameter={x:Static models:MessageType.User}}" />
+
+                        </Frame>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Entry Grid.Row="1" Grid.Column="0" x:Name="txtMessage" />
+        <Button Grid.Row="1" Grid.Column="1" Text="Enviar" Clicked="Button_Clicked" IsEnabled="False" x:Name="btnSend" BackgroundColor="LightBlue" TextColor="DarkBlue" />
+
+        <Button Grid.Row="2" Grid.Column="0" Text="Guardar" Clicked="Button_Save" BackgroundColor="DarkGreen" TextColor="White" />
+        <Button Grid.Row="2" Grid.Column="1" Text="Reset" Clicked="Button_Clean" BackgroundColor="DarkRed" TextColor="White" />
+
+    </Grid>
+
+</ContentPage>
